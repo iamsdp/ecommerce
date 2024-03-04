@@ -1,0 +1,23 @@
+{% extends './navbar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <h3>Add the product </h3>
+        <form method="POST" enctype="multipart/form-data">
+ 
+          <!-- Security token -->
+          {% csrf_token %}
+       
+          <!-- Using the formset -->
+          {{ form|crispy }}
+           
+          <input class="btn btn-success" type="submit" value="Submit">
+          </form>
+      </div>
+      <div class="col-sm-2"></div>
+    </div>   
+
+{% endblock %}

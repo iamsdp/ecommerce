@@ -1,0 +1,72 @@
+{% extends 'base_.html' %}
+
+{% block content %}
+
+Seller: {{ seller }}
+<hr>
+
+<div class="row">
+    <div class="col-4 align-items-center">
+            <h3>Total Product Listed: {{num_products_listed_under_seller}}</h3>
+            <h5>Published Products: {{count_published_products}}</h5>
+            <h5>Drafted Products:{{ count_drafted_products}}</h5>
+      </div>
+    <div class="col-4 align-items-center">
+      <canvas id="pie-chart-order"></canvas>
+      <div style="text-align:center">Orders' Status</div>
+    </div>
+    <div class="col-4 align-items-center">
+        <canvas id="chart-sale"></canvas>
+        <div style="text-align:center"></div>
+      </div>
+  </div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+
+  var config_order = {
+    type: 'pie',
+    data: {
+      datasets: [{
+        data: {{ order_data|safe }},
+        backgroundColor: ['Green', 'Red', 'Yellow'],
+        label: 'Orders'
+      }],
+      labels: {{ order_labels|safe }}
+    },
+    options: {
+      responsive: true
+    }
+  };
+
+  var config_sales = {
+    type: 'line',
+    data: {
+      datasets: [{
+        data: {{ order_item_sold_date_data|safe }},
+        backgroundColor: ['blue', 'voilet', 'Yellow'],
+        label: 'Completed Orders Trend'
+      }],
+      labels: {{order_item_sold_date_label|safe }}
+    },
+    options: {
+      responsive: true
+    }
+  };
+
+
+  window.onload = function() {
+      var ctx_order = document.getElementById('pie-chart-order').getContext('2d');
+      window.myPie1 = new Chart(ctx_order, config_order);
+
+      var ctx_sales = document.getElementById('chart-sale').getContext('2d');
+      window.myPie2 = new Chart(ctx_sales, config_sales);
+
+  };
+
+</script>
+
+{% endblock %}

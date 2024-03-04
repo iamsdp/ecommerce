@@ -1,0 +1,96 @@
+<!doctype html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>E-Shop</title>
+    <style>
+      .card:hover{
+            transform: scale(1.01);
+            box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);}
+    </style>
+  </head>
+
+<body>
+{% comment %}
+{% if request.user.is_authenticated %}
+<p>Hello {{ request.user.first_name }}</p>      
+{% endif %}
+{% endcomment %}
+
+<div class='container'>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'store' %}">
+          <img src="https://img.icons8.com/fluency/48/undefined/shopee.png"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         
+          <ul class="navbar-nav mr-auto">
+            {% if request.user.is_authenticated %}
+            {% if request.user.is_customer %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'cart_list_view' %}">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'my_orders' %}">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'wish_list_view' %}">Wishlist<span class="sr-only">(current)</span> </a>
+            </li>
+            {% endif %}
+            {% endif %}
+          </ul>
+                <ul class="navbar-nav my-2 my-lg-0">
+                  {% if request.user.is_authenticated %}
+                  <li class="nav-item">
+                    
+                    <a class="nav-link" href="{% url 'customer_settings' %}">Account</a>
+                </li>
+                  {% endif %}
+                {% if not request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login_redirect_view' %}">Log In<span class="sr-only">(current)</span></a>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'account_signup' %}">Sign Up<span class="sr-only">(current)</span></a>
+                  </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <div class="row">
+                          <div class="col"><a class="nav-link btn btn-outline-danger btn-sm" href="{% url 'account_logout' %}">Log Out<span class="sr-only">(current)</span> </a></div>
+                          <div class="col">Hello {{ request.user.first_name }}</div>
+                        </div>
+                        
+                    </li>
+                    {% endif %}
+                </ul>
+        </div>
+    </nav>
+
+{% block content %}
+{% endblock content %}
+
+</div>
+
+
+
+<!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<!-- Always remember to call the above files first before calling the bootstrap.min.js file  -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+</body>
+

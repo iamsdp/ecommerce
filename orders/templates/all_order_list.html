@@ -1,0 +1,53 @@
+{% extends "base_.html" %}
+{% load cart %}
+{% load custom_filter %}
+
+    
+{% block content %}
+
+
+  <div class="border rounded p-1 m-4">
+       <p class="display-4 pl-4 ml-4">All Orders</p>
+       <hr>
+       <table class="table">
+           <thead>
+               <tr>
+                   <th>Order ID</th>
+                <th>Date</th>
+                   <th>Image</th>
+                   <th>Product</th>
+                   <th>Customer</th>
+                   <th>Price</th>
+                   <th>Quantity</th>
+                   <th>Total</th>
+                   <th>Status</th>
+                   <th></th>
+                   <th></th>
+               </tr>
+           </thead>
+           <tbody>
+               
+               {% for orderitem in object_list %}
+               <tr>
+                <td>{{orderitem.order.id}}</td>
+                <td>{{orderitem.order.updated_at}}</td>
+                   <td><img style="height: 80px;" class="" src="{{ orderitem.product.image.url }}" alt=""></td>
+                   <td>{{orderitem.product}}</td>
+                   <td>{{orderitem.order.customer}}</td>
+                   <td>{{orderitem.price|currency}}</td>
+                   <td>{{orderitem.quantity}}</td>
+                   
+                   <td>{{orderitem.quantity|multiply:orderitem.price|currency}}</td>
+                
+                   <td>{{orderitem.status}}</td>
+               </tr>
+
+               {% endfor %}
+              
+           </tbody>
+       </table>
+
+  </div>
+
+{% endblock %}
+

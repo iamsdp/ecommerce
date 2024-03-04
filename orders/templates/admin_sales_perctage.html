@@ -1,0 +1,149 @@
+{% extends 'base_.html' %}
+{% block content %}
+<br>
+<div class="card" style="width: 25rem;">
+
+    <div class="card-body">
+        <h3>Total Product Sold : {{ total_products_sold }}</h3>
+    </div>
+  </div>
+<br>
+
+{% comment %}
+<hr>
+<h5><b>Sales of product according to Shop</b></h5>
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Shop Name</th>
+            <th>Sales</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat, sales in sale_by_shop.items %}
+        <tr>
+         <td>{{ cat }}</td>
+            <td>{{ sales }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h5><b>Sales of product according to Category</b></h5>
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Shop Name</th>
+            <th>Sales</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat, sales in sale_by_category.items %}
+        <tr>
+         <td>{{ cat }}</td>
+            <td>{{ sales }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<hr>
+<h5><b>Sales of product according to Brand</b></h5>
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Shop Name</th>
+            <th>Sales</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat, sales in sale_by_brand.items %}
+        <tr>
+         <td>{{ cat }}</td>
+            <td>{{ sales }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endcomment %}
+
+
+
+<div class="row">
+    <div class="col-4 align-items-center">
+      <canvas id="pie-chart-shop"></canvas>
+      <div style="text-align:center">Sales Percentage by Shop</div>
+    </div>
+    <div class="col-4 align-items-center">
+      <canvas id="pie-chart-category"></canvas>
+      <div style="text-align:center;">Sales Percentage by Product Category</div>
+    </div>
+    <div class="col-4 align-items-center">
+        <canvas id="pie-chart-company"></canvas>
+        <div style="text-align:center">Sales Percentage by Product Company</div>
+      </div>
+  </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+
+    var config_shop = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: {{ sale_by_shop_data|safe }},
+          backgroundColor: {{ random_colors|safe }},
+          label: 'Shop'
+        }],
+        labels: {{ sale_by_shop_label|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    var config_cat = {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: {{ sale_by_cat_data|safe }},
+          backgroundColor: {{ random_colors|safe }},
+          label: 'Shop'
+        }],
+        labels: {{ sale_by_cat_label|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    var config_company = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ sale_by_company_data|safe }},
+          backgroundColor: {{ random_colors|safe }},
+          label: 'Shop'
+        }],
+        labels: {{ sale_by_company_label|safe }}
+      },
+      options: {
+        responsive: true,
+      }
+    };
+
+    window.onload = function() {
+        var ctx_shop = document.getElementById('pie-chart-shop').getContext('2d');
+        window.myPie1 = new Chart(ctx_shop, config_shop);
+
+        var ctx_cat = document.getElementById('pie-chart-category').getContext('2d');
+        window.myPie1 = new Chart(ctx_cat, config_cat);
+
+        var ctx_company = document.getElementById('pie-chart-company').getContext('2d');
+        window.myPie1 = new Chart(ctx_company, config_company);
+    };
+
+  </script>
+
+
+{% endblock %}

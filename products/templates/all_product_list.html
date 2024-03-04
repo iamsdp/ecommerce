@@ -1,0 +1,53 @@
+{% extends "base_.html" %}
+{% block content %}
+{% load custom_filter %}
+
+<div class="border rounded p-2 m-3">
+    <h3>All the Products listed on Site</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Seller</th>
+                <th>Category</th>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Color</th>
+                <th>Material</th>
+                <th>Created On</th>
+                <th>Updated On</th>
+                <th>Published</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {% for object in object_list %}
+            <tr>
+                <td>{{object.seller}}</td>
+                <td>{{object.category}}</td>
+                <td><img style="height: 80px;" src="{{ object.image.url }}" alt=""></td>
+                <td>{{object.title}}</td>
+                <td>{{object.description}}</td>
+                <td>{{object.company}}</td>
+                <td>{{object.price|currency}}</td>
+                <td>{{object.color}}</td>
+                <td>{{object.material}}</td>
+                <td>{{object.created_at}}</td>
+                <td>{{object.updated_at}}</td>
+                <td>{{object.is_published}}</td>
+      
+            </tr>
+
+            {% empty %}
+            {% endfor %}
+           
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
+

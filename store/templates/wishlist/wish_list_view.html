@@ -1,0 +1,55 @@
+{% extends "../base.html" %}
+{% load custom_filter %}
+{% block content %}
+
+
+<div class="border rounded p-1 m-3">
+    <p class="display-4 pl-4 ml-4">Your Wishlist</p>
+    <hr>
+    {% if object_list %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Color</th>
+                <th>Material</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {% for object in object_list %}
+            <tr>
+    
+                <td><img style="height: 80px;" src="{{ object.product.image.url }}" alt=""></td>
+                <td>{{object.product.title}}</td>
+                <td>{{object.product.description}}</td>
+                <td>{{object.product.price|currency}}</td>
+                <td>{{object.product.color}}</td>
+                <td>{{object.product.material}}</td>
+                 <td>
+                     <a class="btn btn-secondary btn-sm" href = "{% url 'wish_list_delete' object.pk %}">Remove</a>
+                 </td>
+                 <td>
+                    <a href="{% url 'add_to_cart_view' object.id %}" class="btn btn-primary btn-sm">Add to Cart</a>
+                 </td>
+
+            </tr>
+
+            {% empty %}
+            {% endfor %}
+           
+        </tbody>
+    </table>
+    <hr>
+    {% else %}
+    Opps! Empty Wish List...!!!
+    {% endif %}
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,5 @@
+Hi Admin,
+
+New Shop user has reqested for shop account activation. Kindly verify and activate using attched link:
+
+{{ url }}

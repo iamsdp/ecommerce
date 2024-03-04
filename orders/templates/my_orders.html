@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% load cart %}
+{% load custom_filter %}
+    
+{% block content %}
+
+
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm"><b>Ordered On</b></div>
+        <div class="col-sm"><b>Address</b></div>
+        <div class="col-sm"><b>Phone</b></div>
+        <div class="col-sm"><b>Total Bill</b></div>
+        <div class="col-sm"><b>Order Status</b></div>
+      </div>
+    </div>
+  </div>
+  {% for order, orderItemList in orders_data.items %}
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <div class="row">
+        <div class="col-sm"> 
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne_{{order.id}}" aria-expanded="true" aria-controls="collapseOne">
+            <img src="https://img.icons8.com/color/48/undefined/plus--v1.png"/>
+          </button>
+        </div>
+        <div class="col-sm">{{order.created_at}}</div>
+        <div class="col-sm">{{order.address}}</div>
+        <div class="col-sm">{{order.phone}}</div>
+        <div class="col-sm">{{order.total_amount}}</div>
+        <div class="col-sm">{{order.status}}</div>
+      </div>
+    </div>
+
+    <div id="collapseOne_{{order.id}}" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+
+        <table class="table">
+          <thead>
+              <tr>
+                <th>Item ID</th>
+               <th>Updated on</th>
+                  <th>Image</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th></th>
+                  <th></th>
+              </tr>
+          </thead>
+          
+          <tbody>
+
+        {% for orderitem in orderItemList %}
+        <tr>
+          <td>{{orderitem.id}}</td>
+         <td>{{orderitem.order.updated_at}}</td>
+            <td><img style="height: 80px;" class="" src="{{orderitem.product.image.url}}" alt=""></td>
+            <td>{{orderitem.product}}</td>
+            <td>{{orderitem.price|currency}}</td>
+            <td>{{orderitem.quantity}}</td>
+            <td>{{orderitem.quantity|multiply:orderitem.price|currency}}</td>
+             <td><small class="badge badge-info">{{orderitem.status}}</small></td>
+             <td>                    
+               <div class="dropdown show">
+                 <a class="btn btn-warning btn-sm dropdown-toggle" href="#" role="button" id="dropdownRating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   ★
+                 </a>
+                 <div class="dropdown-menu" aria-labelledby="dropdownRating">
+                   <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=1 %}">★☆☆☆☆</a>
+                   <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=2 %}">★★☆☆☆</a>
+                   <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=3 %}">★★★☆☆</a>
+                   <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=4 %}">★★★★☆</a>
+                   <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=5 %}">★★★★★</a>
+                 </div>
+               </div>
+             </td>
+             <td>
+                 <a href="" data-toggle="modal" data-target="#exampleModal_{{orderitem.id}}" class="btn btn-primary btn-sm">Modify Order</a>
+             </td>
+
+        </tr>
+
+         <!-- Modal -->
+        <div class="modal fade" id="exampleModal_{{orderitem.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">
+                   Order Update Form
+               </h5>
+               <hr>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="m-2 p-3">
+     
+                 <form action="update/" method="POST">
+                     {% csrf_token %}
+
+                     <div class="form-check">
+                         <input class="form-check-input" type="checkbox" name="status" value="cancel" id="status">
+                         <label class="form-check-label" for="status" >
+                           Check to cancel the order
+                         </label>
+                       </div>
+
+                     <hr>
+
+                     <div class="form-group">
+                       <label for="">Address</label>
+                       <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                     </div>
+
+                     <div class="form-group">
+                         <label for="">Phone</label>
+                         <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                     </div>
+                       
+                     <div class="form-group">
+                       <label for=""></label>
+                       <input type="hidden" id="ord_Id" name="Order_Id" value="{{orderitem.id}}">
+                     </div>
+                       
+                     <input type="submit" value="Update" class="btn btn-primary btn-sm">
+                       
+                     </form>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     <!-- End Modal -->
+        {% endfor %}
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+{% comment %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Expand</th>
+      <th>Date</th>
+      <th>Address</th>
+      <th>Phone</th>
+      <th>Total</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for order, orderItemList in orders_data.items %}
+
+<tr>
+  <td>
+    <a class="btn btn-primary btn-sm" data-toggle="collapse" href="#collapseExample_{{ order.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+      (+)</a>
+  </td>
+  <td>{{ order.created_at}}</td>
+  <td>{{ order.address}}</td>
+  <td>{{ order.phone}}</td>
+  <td>{{ order.total_amount}}</td>
+  <td>{{ order.status}}</td>
+</tr>
+
+  <div class="collapse" id="collapseExample_{{ order.id }}">
+    <div class="card card-body">
+
+      <table class="table">
+          <thead>
+              <tr>
+                <th>Item ID</th>
+               <th>Updated on</th>
+                  <th>Image</th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th></th>
+                  <th></th>
+              </tr>
+          </thead>
+          
+          <tbody>
+              
+              {% for orderitem in orderItemList %}
+              <tr>
+                <td>{{orderitem.id}}</td>
+               <td>{{orderitem.order.updated_at}}</td>
+                  <td><img style="height: 80px;" class="" src="{{orderitem.product.image.url}}" alt=""></td>
+                  <td>{{orderitem.product}}</td>
+                  <td>{{orderitem.price|currency}}</td>
+                  <td>{{orderitem.quantity}}</td>
+                  <td>{{orderitem.quantity|multiply:orderitem.price|currency}}</td>
+                   <td><small class="badge badge-info">{{orderitem.status}}</small></td>
+                   <td>                    
+                     <div class="dropdown show">
+                       <a class="btn btn-warning btn-sm dropdown-toggle" href="#" role="button" id="dropdownRating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         ★
+                       </a>
+                       <div class="dropdown-menu" aria-labelledby="dropdownRating">
+                         <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=1 %}">★☆☆☆☆</a>
+                         <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=2 %}">★★☆☆☆</a>
+                         <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=3 %}">★★★☆☆</a>
+                         <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=4 %}">★★★★☆</a>
+                         <a class="dropdown-item" href="{% url 'rate_product_update_view' id=orderitem.product.id rating=5 %}">★★★★★</a>
+                       </div>
+                     </div>
+                   </td>
+                   <td>
+                       <a href="" data-toggle="modal" data-target="#exampleModal_{{orderitem.id}}" class="btn btn-primary btn-sm">Modify Order</a>
+                   </td>
+
+              </tr>
+
+               <!-- Modal -->
+              <div class="modal fade" id="exampleModal_{{orderitem.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">
+                         Order Update Form
+                     </h5>
+                     <hr>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                     </button>
+                   </div>
+                   <div class="modal-body">
+                     <div class="m-2 p-3">
+           
+                       <form action="update/" method="POST">
+                           {% csrf_token %}
+
+                           <div class="form-check">
+                               <input class="form-check-input" type="checkbox" name="status" value="cancel" id="status">
+                               <label class="form-check-label" for="status" >
+                                 Check to cancel the order
+                               </label>
+                             </div>
+
+                           <hr>
+
+                           <div class="form-group">
+                             <label for="">Address</label>
+                             <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                           </div>
+
+                           <div class="form-group">
+                               <label for="">Phone</label>
+                               <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                           </div>
+                             
+                           <div class="form-group">
+                             <label for=""></label>
+                             <input type="hidden" id="ord_Id" name="Order_Id" value="{{orderitem.id}}">
+                           </div>
+                             
+                           <input type="submit" value="Update" class="btn btn-primary btn-sm">
+                             
+                           </form>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           <!-- End Modal -->
+              {% endfor %}
+             
+          </tbody>
+          
+      </table>
+      <hr>
+      <!-- <div class="m-3 p-3">
+          <a href="" class="btn btn-outline-info border rounded  col-lg-3 float-right">Modify Order</a>
+      </div> -->
+ 
+    <!-- card body end  -->
+    </div>
+  </div>
+
+{% endfor %}
+</tbody>
+</table>
+{% endcomment %}
+
+
+
+
+{% endblock %}
+

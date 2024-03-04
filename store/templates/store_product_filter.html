@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load custom_filter %}
+
+{% block content %}
+{% load widget_tweaks %}
+    
+  <form method="get">    
+    <div class="container p-2 mx-auto" style="border:1px solid #cecece;">
+        <div class="row">
+            <div class="col-sm-6">
+                <small>Search By Title:</small> 
+                 {{ filter.form.title|add_class:'form-control' }} 
+            </div>
+            <div class="col-sm-3">
+                <br>
+                <button class="btn  btn-block btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#collapsePriceSort" aria-expanded="false" aria-controls="collapseExample">
+                    Sort
+                </button>
+                <div class="collapse" id="collapsePriceSort">
+                    <div class="card card-body">
+                        {{ filter.form.price }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <br>
+                <button type="submit" class="btn btn-success btn-sm">Search</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-3">
+                <button class="btn btn-block btn-primary btn-sm" href="#" type="button" data-toggle="collapse" data-target="#collapseCategory" aria-expanded="false" aria-controls="collapseExample">
+                    Category
+                </button>
+                <div class="collapse" id="collapseCategory">
+                <div class="card card-body">
+                    {% for category in filter.form.category %}
+                    {{ category }}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <button class="btn btn-block btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapsecompany" aria-expanded="false" aria-controls="collapseExample">
+                    Company
+                </button>
+                <div class="collapse" id="collapsecompany">
+                <div class="card card-body">
+                    {% for company_ in filter.form.company %}
+                    {{ company_ }}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <button class="btn btn-block btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapsecolor" aria-expanded="false" aria-controls="collapseExample">
+                    Colors
+                </button>
+                <div class="collapse" id="collapsecolor">
+                <div class="card card-body">
+                    {% for color_ in filter.form.color %}
+                    {{ color_ }}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <button class="btn btn-block btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapsematerial" aria-expanded="false" aria-controls="collapseExample">
+                    Material
+                </button>
+                <div class="collapse" id="collapsematerial">
+                <div class="card card-body">
+                    {% for material_ in filter.form.material %}
+                    {{ material_ }}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+  </form>
+
+
+
+  <div class="container-fluid mt-3">
+    <div class="row">
+          <div class="col-lg-12 mx-auto">
+              <div class="row mx-auto mt-3">
+                  {% for object in object_list %}  
+                  <!-- filter.qs -->
+                      <div class="card mx-auto mb-0" style="width: 18rem;">
+                          {% if object.image %}
+                          <img class="card-img-top" style="height: 250px;" src="{{object.image.url}}" alt="Card image cap">
+                          {% else %}
+                          <img class="card-img-top" src="https://picsum.photos/id/0/200/300" alt="Card image cap">
+                          {% endif %}
+                          <div class="card-body">
+                            <h5 class="card-title">{{ object.title }}</h5>
+                            <p class="card-text"> <b>{{ object.price|currency }}</b></p>
+                            <p class="card-text">{{ object.description }}</p>
+                            <div class="card-footer p-0">
+                                <table class="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"><a href="{% url 'add_to_cart_view' object.id %}" class="btn btn-primary btn-sm">Add to Cart</a></th>
+                                        <th scope="col"><a href="{% url 'action_add_wishlist' object.id %}" class="btn btn-warning btn-sm">Add to WishList</a></th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        
+                      </div>
+                      {% empty %}
+                      <li>No Products Listed..</li>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+
+  </div> 
+
+  <hr>
+<!-- Pagination -->
+<div class="pagination">
+<span class="step-links">
+  {% if page_obj.has_previous %}
+   <a href="?{% url_replace page=page_obj.previous_page_number %}">Prev</a>
+  {% endif %}
+  <span class="current">
+   Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </span>
+  {% if page_obj.has_next %}
+   <a href="?{% url_replace page=page_obj.next_page_number %}">Next</a>
+  {% endif %}
+ </span>
+</div>
+
+
+{% comment %}
+  <br>
+  <ul>
+  {% for product in filter.qs %}
+    <li>{{ product.title }}</li>
+  {% endfor %}
+  </ul>
+{% endcomment %}
+
+{% endblock %}
